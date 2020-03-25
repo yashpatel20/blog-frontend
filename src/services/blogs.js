@@ -21,8 +21,19 @@ const create = async newObject => {
 };
 
 const update = async (id, newObject) => {
-  const request = await axios.put(`${baseUrl} /${id}`, newObject);
-  return request.data;
+  const config = {
+    headers: { Authorization: token, "Content-type": "application/json" }
+  };
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config);
+  return response.data;
 };
 
-export default { getAll, create, update, setToken };
+const deleteReq = async id => {
+  const config = {
+    headers: { Authorization: token, "Content-type": "application/json" }
+  };
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response;
+};
+
+export default { getAll, create, update, deleteReq, setToken };

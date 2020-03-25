@@ -6,6 +6,7 @@ import loginService from "./services/login";
 import Togglable from "./components/Togglable";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
+import { findAllByAltText } from "@testing-library/react";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,9 +15,13 @@ const App = () => {
   const [notifMessage, setNotifMessage] = useState([true, "Read successful"]);
   const [user, setUser] = useState(null);
 
+  const blogFormRef = React.createRef();
   //Effects
   useEffect(() => {
-    blogService.getAll().then(blogs => setBlogs(blogs));
+    blogService.getAll().then(blogs => {
+      blogs.sort((a, b) => a.likes - b.likes);
+      setBlogs(blogs);
+    });
   }, []);
 
   //TODO logout button
@@ -59,6 +64,7 @@ const App = () => {
   };
 
   const addBlog = async blogObject => {
+    blogFormRef.current.toggleVisibility();
     try {
       const response = await blogService.create(blogObject);
       setBlogs(blogs.concat(response));
@@ -69,6 +75,34 @@ const App = () => {
     }
   };
 
+  const updateLikes = async blogObject => {
+    try {
+      const findBlog = blogs.find(item => item.title === blogObject.title);
+      const response = await blogService.update(findBlog.id, blogObject);
+      const newBlogs = blogs
+        .map(blog => (blog.title === findBlog.title ? response : blog))
+        .sort((a, b) => a.likes - b.likes);
+      setBlogs(newBlogs);
+      setNotifMessage([true, "Update successful"]);
+    } catch (error) {
+      console.log(error);
+      setNotifMessage([false, error.message]);
+    }
+  };
+
+  const deleteBlog = async blogObject => {
+    try {
+      const findBlog = blogs.find(item => item.title === blogObject.title);
+      await blogService.deleteReq(findBlog.id);
+      const newBlogs = blogs
+        .filter(blog => blog.title !== findBlog.title)
+        .sort((a, b) => a.likes - b.likes);
+      setBlogs(newBlogs);
+    } catch (error) {
+      console.log(error);
+      setNotifMessage([false, error.message]);
+    }
+  };
   //forms
   const loginForm = () => (
     <Togglable buttonLabel="login">
@@ -77,7 +111,7 @@ const App = () => {
   );
 
   const blogForm = () => (
-    <Togglable buttonLabel="new note">
+    <Togglable buttonLabel="new note" ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   );
@@ -95,8 +129,9 @@ const App = () => {
           author={blog.author}
           url={blog.url}
           likes={blog.likes}
+          updateLikes={updateLikes}
+          deleteBlog={deleteBlog}
         />
-        <hr></hr>
       </div>
     );
   });
