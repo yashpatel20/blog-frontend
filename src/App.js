@@ -6,7 +6,6 @@ import loginService from './services/login'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import { findAllByAltText } from '@testing-library/react'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -53,15 +52,15 @@ const App = () => {
     }
   }
 
-  const handleLogout = event => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
 
-  const handleFilterNameChange = event => {
-    setNewFilterName(event.target.value)
-    setShowAll(false)
-  }
+  // const handleFilterNameChange = event => {
+  //   setNewFilterName(event.target.value)
+  //   setShowAll(false)
+  // }
 
   const addBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
