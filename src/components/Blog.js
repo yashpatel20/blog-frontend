@@ -1,15 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
+import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
+import CardContent from '@material-ui/core/CardContent'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+
+const styles = {
+  card: {
+    position: 'relative',
+    display: 'flex',
+    marginBottom: 20
+  },
+  image: {
+    minWidth: 200
+  },
+  content: {
+    padding: 25,
+    objectFit: 'cover'
+  }
+}
 
 const Blog = ({ title, author, url, likes, updateLikes, deleteBlog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   const handleLikeButton = () => {
     const blogObject = {
       title: title,
@@ -29,21 +42,20 @@ const Blog = ({ title, author, url, likes, updateLikes, deleteBlog }) => {
     }
     deleteBlog(blogObject)
   }
-
+  const classes = useStyles()
+  const bull = <span className={classes.bullet}>•</span>
   return (
-    <li className="blog">
-      <div style={blogStyle}>
-        <div>{title}</div>
-        <div>{author}</div>
-        <div>{url}</div>
-        <div>
-          {likes} <button onClick={handleLikeButton}>Like</button>
-        </div>
-        <div>
-          <button onClick={handleDeleteButton}>Delete</button>
-        </div>
+    <div>
+      <div>{title}</div>
+      <div>{author}</div>
+      <div>{url}</div>
+      <div>
+        {likes} <button onClick={handleLikeButton}>Like</button>
       </div>
-    </li>
+      <div>
+        <button onClick={handleDeleteButton}>Delete</button>
+      </div>
+    </div>
   )
 }
 

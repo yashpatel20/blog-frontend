@@ -6,6 +6,34 @@ import loginService from './services/login'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Navbar from './components/Navbar'
+import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles'
+import createMuiTheme from '@material-ui/core/styles/createMuiTheme'
+import './App.css'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#33c9dc',
+      main: '#00bcd4',
+      dark: '#008394',
+      contrastText: '#fff'
+    },
+    secondary: {
+      light: '#ff6333',
+      main: '#ff3d00',
+      dark: '#b22a00',
+      contrastText: '#fff'
+    }
+  },
+  typography: {
+    useNextVariants: true
+  }
+})
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -117,47 +145,63 @@ const App = () => {
   )
 
   //filter //add filtering using regex later
-  const blogsToShow = showAll
-    ? blogs
-    : blogs.filter(blog => blog.name === newFilterName)
-  const rows = blogsToShow.map(blog => {
-    return (
-      <div>
-        <Blog
-          key={blog.title}
-          title={blog.title}
-          author={blog.author}
-          url={blog.url}
-          likes={blog.likes}
-          updateLikes={updateLikes}
-          deleteBlog={deleteBlog}
-        />
-      </div>
-    )
-  })
+  // const blogsToShow = showAll
+  //   ? blogs
+  //   : blogs.filter(blog => blog.name === newFilterName)
+  // const rows = blogsToShow.map(blog => {
+  //   return (
+  //     <div>
+  //       <Blog
+  //         key={blog.id}
+  //         title={blog.title}
+  //         author={blog.author}
+  //         url={blog.url}
+  //         likes={blog.likes}
+  //         updateLikes={updateLikes}
+  //         deleteBlog={deleteBlog}
+  //       />
+  //     </div>
+  //   )
+  // })
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification message={notifMessage} />
+    <MuiThemeProvider theme={theme}>
+      <div>
+        <Router>
+          <Navbar />
+          <div className="container">
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/signup" component={Signup} />
+            </Switch>
+          </div>
+        </Router>
 
-      {user === null ? (
-        loginForm()
-      ) : (
         <div>
-          <p>
-            {user.name} logged in <button onClick={handleLogout}>Logout</button>
-          </p>
-          <div>{blogForm()}</div>
-          <div>{rows}</div>
-        </div>
-      )}
+          <h2>blogs</h2>
+          <Notification message={notifMessage} />
 
-      {/* <div>
+          {user === null ? (
+            loginForm()
+          ) : (
+            <div>
+              <p>
+                {user.name} logged in{' '}
+                <button onClick={handleLogout}>Logout</button>
+              </p>
+              <div>{blogForm()}</div>
+              {/* <div>{rows}</div> */}
+            </div>
+          )}
+
+          {/* <div>
         Filter:{" "}
         <input value={newFilterName} onChange={handleFilterNameChange} />
       </div> */}
-    </div>
+        </div>
+      </div>
+    </MuiThemeProvider>
   )
 }
 
