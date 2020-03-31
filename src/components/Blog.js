@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActions from '@material-ui/core/CardActions'
@@ -7,22 +8,23 @@ import CardContent from '@material-ui/core/CardContent'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 
-const styles = {
-  card: {
-    position: 'relative',
-    display: 'flex',
-    marginBottom: 20
-  },
-  image: {
-    minWidth: 200
-  },
-  content: {
-    padding: 25,
-    objectFit: 'cover'
+const useStyles = makeStyles({
+  root: {
+    minWidth: 150,
+    marginBottom: 25
   }
-}
+})
 
-const Blog = ({ title, author, url, likes, updateLikes, deleteBlog }) => {
+const Blog = ({
+  title,
+  author,
+  url,
+  likes,
+  userHandle,
+  updateLikes,
+  deleteBlog
+}) => {
+  const classes = useStyles()
   const handleLikeButton = () => {
     const blogObject = {
       title: title,
@@ -42,20 +44,37 @@ const Blog = ({ title, author, url, likes, updateLikes, deleteBlog }) => {
     }
     deleteBlog(blogObject)
   }
-  const classes = useStyles()
-  const bull = <span className={classes.bullet}>•</span>
+
   return (
-    <div>
-      <div>{title}</div>
-      <div>{author}</div>
-      <div>{url}</div>
-      <div>
-        {likes} <button onClick={handleLikeButton}>Like</button>
-      </div>
-      <div>
-        <button onClick={handleDeleteButton}>Delete</button>
-      </div>
-    </div>
+    <Card className={classes.root}>
+      <CardContent>
+        <Typography variant="h5" component="h2">
+          {title}
+        </Typography>
+        <Typography color="textSecondary">{author}</Typography>
+        <Typography color="textSecondary">{url}</Typography>
+        <Typography color="textSecondary">{likes}</Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" color="primary" onClick={handleLikeButton}>
+          Like
+        </Button>
+        <Button size="small" color="secondary" onClick={handleDeleteButton}>
+          Delete
+        </Button>
+      </CardActions>
+    </Card>
+    // <div>
+    //   {/* <div>{title}</div>
+    //   <div>{author}</div>
+    //   <div>{url}</div>
+    //   <div>
+    //     {likes} <button onClick={handleLikeButton}>Like</button>
+    //   </div>
+    //   <div>
+    //     <button onClick={handleDeleteButton}>Delete</button>
+    //   </div> */}
+    // </div>
   )
 }
 

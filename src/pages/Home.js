@@ -44,25 +44,19 @@ const Home = () => {
     }
   }
 
-  const rows = blogs ? (
-    blogs.map(blog => {
-      return (
-        <div>
-          <Blog
-            key={blog.id}
-            title={blog.title}
-            author={blog.author}
-            url={blog.url}
-            likes={blog.likes}
-            updateLikes={updateLikes}
-            deleteBlog={deleteBlog}
-          />
-        </div>
-      )
-    })
-  ) : (
-    <p>Loading ...</p>
-  )
+  const rows = blogs.map(blog => {
+    return (
+      <Blog
+        key={blog.id}
+        title={blog.title}
+        author={blog.author}
+        url={blog.url}
+        likes={blog.likes}
+        updateLikes={updateLikes}
+        deleteBlog={deleteBlog}
+      />
+    )
+  })
 
   return (
     <Grid container>
